@@ -1,27 +1,30 @@
-import * as React from 'react';
-import * as ReactDom from 'react-dom';
-import { Version } from '@microsoft/sp-core-library';
+import * as React from "react";
+import * as ReactDom from "react-dom";
+import { Version } from "@microsoft/sp-core-library";
 import {
   IPropertyPaneConfiguration,
   PropertyPaneTextField
-} from '@microsoft/sp-property-pane';
-import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
+} from "@microsoft/sp-property-pane";
+import { BaseClientSideWebPart } from "@microsoft/sp-webpart-base";
 
-import * as strings from 'ReactWebPartDemoWebPartStrings';
-import ReactWebPartDemo from './components/ReactWebPartDemo';
-import { IReactWebPartDemoProps } from './components/IReactWebPartDemoProps';
+import * as strings from "ReactWebPartDemoWebPartStrings";
+import ReactWebPartDemo from "./components/ReactWebPartDemo";
+import { IReactWebPartDemoProps } from "./components/IReactWebPartDemoProps";
 
 export interface IReactWebPartDemoWebPartProps {
   description: string;
 }
 
-export default class ReactWebPartDemoWebPart extends BaseClientSideWebPart <IReactWebPartDemoWebPartProps> {
-
+export default class ReactWebPartDemoWebPart extends BaseClientSideWebPart<
+  IReactWebPartDemoWebPartProps
+> {
   public render(): void {
     const element: React.ReactElement<IReactWebPartDemoProps> = React.createElement(
       ReactWebPartDemo,
       {
-        description: this.properties.description
+        description: this.properties.description,
+        spHttpClient: this.context.spHttpClient,
+        currentSiteUrl: this.context.pageContext.web.absoluteUrl
       }
     );
 
@@ -33,7 +36,7 @@ export default class ReactWebPartDemoWebPart extends BaseClientSideWebPart <IRea
   }
 
   protected get dataVersion(): Version {
-    return Version.parse('1.0');
+    return Version.parse("1.0");
   }
 
   protected getPropertyPaneConfiguration(): IPropertyPaneConfiguration {
@@ -47,7 +50,7 @@ export default class ReactWebPartDemoWebPart extends BaseClientSideWebPart <IRea
             {
               groupName: strings.BasicGroupName,
               groupFields: [
-                PropertyPaneTextField('description', {
+                PropertyPaneTextField("description", {
                   label: strings.DescriptionFieldLabel
                 })
               ]
